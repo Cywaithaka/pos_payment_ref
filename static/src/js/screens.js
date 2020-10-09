@@ -2,6 +2,8 @@ odoo.define('pos_payment_ref.screens', function (require) {
 "use strict";
 
     var screens = require('point_of_sale.screens');
+    var core = require('web.core');
+    var _t = core._t;
 
     screens.PaymentScreenWidget.include({
         show_popup_payment_info: function(options) {
@@ -32,11 +34,16 @@ odoo.define('pos_payment_ref.screens', function (require) {
             },
         });
     },
-        click_paymentmethods: function(id) {
+    click_paymentmethods: function(id) {
         var selectedOrder = this.pos.get_order();
         var client = selectedOrder.get_client();
         if(!client){
-                return alert ('Please Select Customer !');
+                //return alert ('Please Select a Customer!');
+                this.pos.gui.show_popup('error',{
+                    'title': _t('Select a Customer'),
+                    'body':  _t('Please select a customer in order to use this payment method'),
+            });
+            return Promise.reject();
         }
         var self = this;
 
