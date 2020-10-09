@@ -36,19 +36,22 @@ odoo.define('pos_payment_ref.screens', function (require) {
     },
     click_paymentmethods: function(id) {
         var selectedOrder = this.pos.get_order();
-        var client = selectedOrder.get_client();
-        if(!client){
-                //return alert ('Please Select a Customer!');
-                this.pos.gui.show_popup('error',{
-                    'title': _t('Select a Customer'),
-                    'body':  _t('Please select a customer in order to use this payment method'),
-            });
-            return Promise.reject();
-        }
+
         var self = this;
 
         var payment_method = this.pos.payment_methods_by_id[id];
         if (payment_method.pos_payment_ref == true) {
+
+            var client = selectedOrder.get_client();
+            if(!client){
+                    //return alert ('Please Select a Customer!');
+                    this.pos.gui.show_popup('error',{
+                        'title': _t('Select a Customer'),
+                        'body':  _t('Please select a customer in order to use this payment method'),
+                });
+                return Promise.reject();
+            }
+
             this.show_popup_payment_info({
                 confirm: function(infos) {
                     var self = this;
